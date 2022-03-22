@@ -37,3 +37,57 @@ managers$AgeCat[managers$Age <= 25] <- "Young"
 managers$AgeCat[is.na(managers$Age)] <- "Elder"
 
 managers
+str(managers) # also prints the datatypes
+summary(managers) # gives a summary of the data. max, min, mean, median, mode, NAs, datatypes, 1st and 3rd quartile
+
+# recode ageCat to make it ordinaled and factored. makes young = 1, middle aged = 2, elder = 3.
+agecat <- factor(managers$AgeCat, 
+                 order=TRUE,
+                 levels = c("Young", "Middle Aged", "Elder"))
+
+# replace managers AgeCat with newly factored variable
+managers$AgeCat <- agecat
+managers
+str(managers) # we can see that young, middle aged and elder is still there but is 1,2,3 in the background
+
+# create new column called summary_col that contains a summary of each row.
+# create a vector of the sum of Q1 to Q3 in each row
+#summary_col <- managers$Q1 + managers$Q2 + managers$Q3 + managers$Q4 + managers$Q5
+
+attach(managers)
+summary_col <- Q1 + Q2 + Q3 + Q4 + Q5
+detach(managers)
+summary_col
+
+managers$summaryCol <- summary_col
+managers
+
+# create a new dataframe that adds summary_col onto the managers dataframe
+managers <- data.frame(managerst, summary_col)
+
+# create a new column called mean_value to contain means of the answers
+# rowMeans()
+# gets the values in columns 5 to 9, calculates the mean, assign to mean_value as a vector
+mean_value <- rowMeans(managers[5:9])
+mean_value
+
+# create a new column in DF managers called Mean_Value. Put the values in mean_value in that column
+managers$Mean_Value <- mean_value
+managers
+
+# change the column names from summaryCol to Summary
+# names(manager) is a vector containing all the column names
+names(managers)[11] <- "Summary"
+names(managers)[12] <- "Mean"
+managers
+
+str(managers)
+
+# convert date to a useful date type
+dates <- managers$Date # gets values from Dates column
+#                       match this with the chr date
+dates <- as.Date(dates, "%Y-%d-%m") # convert to dates
+dates
+
+managers$Date <- dates # replace existing dates column with new real dates
+managers
